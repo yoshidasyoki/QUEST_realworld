@@ -2,58 +2,59 @@
 @section('title', 'RealWorld')
 
 @section('content')
-    <header class="bg-theme-color text-white text-lg py-8 text-center">
+    <x-message></x-message>
+
+    <header class="bg-theme-color-400 text-white text-lg py-8 text-center">
         <h1>conduit</h1>
         <p>A place to share your knowledge.</p>
     </header>
 
     <main class="mx-auto max-w-5xl">
-        <div class="grid grid-cols-12 gap-6 py-10">
+        <div class="grid grid-cols-12 items-start gap-6 py-10">
             {{-- 投稿一覧 --}}
             <section class="col-span-9">
                 {{-- 切り替えボタン --}}
                 <nav class="px-6 py-3 border-b border-gray-200">
                     <ul class="flex gap-6 text-lg">
                         <li><a href=""
-                                class="text-theme-color font-bold hover:border-b-2 hover:border-theme-color">Your
+                                class="text-theme-color-400 font-bold hover:border-b-2 hover:border-theme-color-400">Your
                                 Feed</a>
                         </li>
                         <li><a href=""
-                                class="text-theme-color font-bold hover:border-b-2 hover:border-theme-color">Global
+                                class="text-theme-color-400 font-bold hover:border-b-2 hover:border-theme-color-400">Global
                                 Feed</a>
                         </li>
                     </ul>
                 </nav>
 
                 {{-- 記事の表示 --}}
-                <div>
-                    <article class="pt-12 text-sub-color border-t border-gray-200">
-                        <h2 class="text-xl text-heading-color font-bold">How to build webapps that scale</h2>
-                        <p>This is the description for the post.</p>
+                <div class="mb-6">
+                    @foreach ($articles as $article)
+                        <article class="pt-12 text-sub-color border-t border-gray-200">
+                            <h2 class="text-xl text-heading-color font-bold">
+                                <a href={{ route('article.show', $article->id) }}>
+                                    {{ $article->title }}
+                                </a>
+                            </h2>
+                            <p>{{ $article->meta_description }}</p>
 
-                        <div class="py-5 flex justify-between">
-                            <span class="text-xs">Read more...</span>
-                            <div class="flex gap-3">
-                                <span class="text-xs border border-gray-300 px-2.5 py-0.3 rounded-2xl">realworld</span>
-                                <span
-                                    class="text-xs border border-gray-300 px-2.5 py-0.3 rounded-2xl">implementations</span>
+                            <div class="py-5 flex justify-between">
+                                <span class="text-xs">Read more...</span>
+                                <div class="flex gap-3">
+                                    @foreach ($article->tags as $tag)
+                                        <x-tag tag="{{ $tag->name }}" />
+                                    @endforeach
+                                </div>
                             </div>
-                        </div>
-                    </article>
+                        </article>
+                    @endforeach
 
-                    <article class="pt-12 text-sub-color border-t border-gray-200">
-                        <h2 class="text-xl text-heading-color font-bold">The song you won't ever stop singing. No matter
-                            how hard you try.</h2>
-                        <p>This is the description for the post.</p>
-
-                        <div class="py-5 flex justify-between">
-                            <span class="text-xs">Read more...</span>
-                            <div class="flex gap-3">
-                                <x-tag tag="realworld" />
-                                <x-tag tag="implementations" />
-                            </div>
-                        </div>
-                    </article>
+                </div>
+                <div class="justify-end flex w-full">
+                    <a href={{ route('article.create') }}>
+                        <x-button buttonText="Create Article"
+                            class="bg-theme-color-400 text-white hover:bg-theme-color-700" />
+                    </a>
                 </div>
             </section>
 

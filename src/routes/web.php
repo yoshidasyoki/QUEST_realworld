@@ -1,15 +1,11 @@
 <?php
 
+use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('home.index');
-});
+// ホーム画面
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::get('/create', function () {
-    return view('create.index');
-});
-
-Route::get('/article', function () {
-    return view('article.index');
-});
+// CRUD操作
+Route::resource('article', ArticleController::class);
