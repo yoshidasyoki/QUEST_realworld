@@ -1,7 +1,7 @@
 @extends('layout')
 @section('title', 'create')
 
-@include('article._form', [
+@include('templates._article-form', [
     'action' => 'article.store',
     'buttonText' => 'Publish Article',
 ])

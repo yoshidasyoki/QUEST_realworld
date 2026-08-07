@@ -1,5 +1,5 @@
 @if (session()->has('success') || session()->has('error'))
-    <div class="fixed top-25 left-1/2 -translate-x-1/2 animate-fadeout">
+    <div class="fixed top-20 left-1/2 -translate-x-1/2 animate-fadeout">
         <div @class([
             'flex',
             'items-center',
