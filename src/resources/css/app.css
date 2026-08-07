@@ -36,6 +36,10 @@
 }
 
 @layer base {
+    body {
+        @apply box-border;
+    }
+
     h1 {
         @apply text-4xl font-bold;
     }

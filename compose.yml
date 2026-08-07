@@ -1,9 +1,11 @@
 services:
-
   app:
     build:
       context: .
       dockerfile: docker/app/Dockerfile
+      args:
+          UID: ${UID}
+          GID: ${GID}
     ports:
       - "9000:9000"
     volumes:
@@ -18,7 +20,7 @@ services:
     env_file:
       - docker/db/db_variables.env
     ports:
-     - "3306:3306"
+      - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
 

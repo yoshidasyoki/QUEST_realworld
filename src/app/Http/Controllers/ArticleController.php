@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ArticleRequest;
 use App\Models\Article;
 use App\Models\Tag;
@@ -38,7 +39,7 @@ class ArticleController extends Controller
         try {
             DB::transaction(function () use ($form) {
                 $article = Article::create([
-                    'user_id' => 1,     // TODO：ログイン実装時にはauthの値を使用すること
+                    'user_id' => Auth::id(),
                     'title' => $form['title'],
                     'meta_description' => $form['meta_description'],
                     'body' => $form['body'],
@@ -57,18 +58,22 @@ class ArticleController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Article $article)
     {
-        $article = Article::findOrFail($id);
-        return view('article.show.index', ['article' => $article]);
+        $isAuthor = (Auth::id() === $article->user_id);
+        return view('article.show.index', [
+            'article' => $article,
+            'isAuthor' => $isAuthor
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Article $article)
     {
-        $article = Article::findOrFail($id);
+        $this->authorize('update', $article);
+
         $tags = Tag::all();
         return view('article.edit.index', ['article' => $article, 'tags' => $tags]);
     }
@@ -76,10 +81,10 @@ class ArticleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(ArticleRequest $request, string $id)
+    public function update(ArticleRequest $request, Article $article)
     {
         $form = $request->validated();
-        $article = Article::findOrFail($id);
+        $this->authorize('update', $article);
 
         try {
             DB::transaction(function () use ($article, $form) {
@@ -105,9 +110,10 @@ class ArticleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Article $article)
     {
-        $article = Article::findOrFail($id);
+        $this->authorize('delete', $article);
+
         $article->delete();
         session()->flash('success', 'Article deleted!');
         return to_route('home');
