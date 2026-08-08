@@ -86,7 +86,7 @@ realworld-nginx-1   realworld-nginx   "/docker-entrypoint.…"   nginx     3 sec
 
 以下コマンドでまずコンテナ内へ入ります。
 ```bash
-docker compose exec abb bash
+docker compose exec app bash
 ```
 
 コンテナ内へ入ることができたら以下コマンドを実行し、Laravelのインストール等を行います。
