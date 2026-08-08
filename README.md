@@ -96,7 +96,7 @@ composer require -n
 
 無事処理が完了したら次に、アプリ動作に必要な環境変数を設定していきます。以下コマンドでアプリの環境変数を管理する`.env`ファイルを作成します。
 ```bash
-cd src && cp .env.example
+cp .env.example .env
 ```
 
 `.env`ファイルのうち以下の部分を変更します。
