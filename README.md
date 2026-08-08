@@ -54,8 +54,12 @@ source ./set_container_user.sh
 `env`コマンドでLinux側の環境変数を確認し、以下のように`HOST_UID`と`HOST_GID`が設定されていれば設定は完了です。
 ```bash
 env | grep "HOST*"
-# HOST_UID=1000
-# HOST_GID=1000
+```
+
+↓ 実行結果（番号は環境によって異なる可能性あり。このようになっていればOKです）
+```bash
+HOST_UID=1000
+HOST_GID=1000
 ```
 
 ### Docker環境の構築
