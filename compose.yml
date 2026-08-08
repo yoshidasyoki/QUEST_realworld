@@ -4,8 +4,9 @@ services:
       context: .
       dockerfile: docker/app/Dockerfile
       args:
-          UID: ${UID}
-          GID: ${GID}
+        HOST_UID: ${HOST_UID}
+        HOST_GID: ${HOST_GID}
+    user: "${HOST_UID}:${HOST_GID}"
     ports:
       - "9000:9000"
     volumes:

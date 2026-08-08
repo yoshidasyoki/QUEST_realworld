@@ -1,10 +1,10 @@
 FROM php:8.5-fpm
 
-ARG UID=1000
-ARG GID=1000
+ARG HOST_UID
+ARG HOST_GID
 
-RUN groupadd -g ${GID} app \
-    && useradd -u ${UID} -g app -m app
+RUN groupadd -g ${HOST_GID} app \
+    && useradd -u ${HOST_UID} -g ${HOST_GID} -m app
 
 WORKDIR /var/www/html
 
@@ -20,5 +20,3 @@ COPY ./docker/app/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
     && apt-get install -y nodejs
-
-USER app
