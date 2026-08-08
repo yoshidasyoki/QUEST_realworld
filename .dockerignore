@@ -1,3 +1,11 @@
+docker/db/db_variables.env
+src/.env
+
+src/node_modules
+src/vendor
+
 README.md
-set_container_user.sh
 docs/
+
+.git
+set_container_user.sh
