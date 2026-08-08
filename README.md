@@ -33,63 +33,97 @@ compose.yml  docker  src
 ```
 
 ### 環境変数の設定
-動作を行わせるうえで、環境変数の設定が一部必要になります。  
+イメージのビルド＆コンテナ起動時に必要となる環境変数の設定を行います。 
 
-最初にDockerコンテナの権限
+まずはDB動作に必要な環境変数を設定します。
+`docker/db`ディレクトリ下へ移動し、`db_variables.env`という名前のファイルを作成します。そして環境変数を設定します（以下は一例）。
 
-次に`compose.yml`と同階層の場所で以下コマンドを実行し、イメージの作成を行います（数分かかる場合があります）。
-```bash
-docker compose build
+```env
+MYSQL_ROOT_PASSWORD=pass
+MYSQL_DATABASE=laravel_db
+MYSQL_USER=laravel_user
+MYSQL_PASSWORD=pass
 ```
 
-完了のメッセージが出たらコンテナの作成・起動も行います。
+次にシェル変数の設定を行います。`compose.yml`と同階層の位置に戻り、以下のコマンドを実行します。
+```bash
+source ./set_container_user.sh
+```
+
+`env`コマンドでLinux側の環境変数を確認し、以下のように`HOST_UID`と`HOST_GID`が設定されていれば設定は完了です。
+```bash
+env | grep "HOST*"
+# HOST_UID=1000
+# HOST_GID=1000
+```
+
+### Docker環境の構築
+以下コマンドでイメージビルドとコンテナの起動を行います。
 ```bash
 docker compose up -d
 ```
 
-`docker compose ps`コマンドで起動状態を確認し、`web`コンテナが表示されればOKです。
+処理が終わったらコンテナが正常に起動していることを以下コマンドで確認します。
 ```bash
-docker compose ps
-```
-```
-# 実行結果
-NAME         IMAGE      COMMAND                  SERVICE   CREATED          STATUS          PORTS
-test-web-1   test-web   "docker-php-entrypoi…"   web       15 seconds ago   Up 14 seconds   80/tcp
+doker compose ps
 ```
 
-以下コマンドでゲームの動作に必要となるライブラリやモジュールのインストールを行います。
+このような形で`app`、`db`、`nginx`コンテナがそれぞれ起動していればOKです。
 ```bash
-docker compose exec web composer install
-```
-完了のメッセージが出たら環境構築は終了になります。
-
-### ゲーム開始方法
-`compose.yml`ファイルと同階層にいる状態で以下コマンドを実行するとゲームを開始することができます。
-```bash
-docker compose exec web php index.php
-```
-```
-# 実行結果
-戦争を開始します。
-プレイヤーの人数を入力してください（2~5）：
+NAME                IMAGE             COMMAND                  SERVICE   CREATED         STATUS                  PORTS
+realworld-app-1     realworld-app     "docker-php-entrypoi…"   app       4 seconds ago   Up 3 seconds            0.0.0.0:9000->9000/tcp, [::]:9000->9000/tcp
+realworld-db-1      realworld-db      "docker-entrypoint.s…"   db        4 seconds ago   Up 3 seconds            0.0.0.0:3306->3306/tcp, [::]:3306->3306/tcp
+realworld-nginx-1   realworld-nginx   "/docker-entrypoint.…"   nginx     3 seconds ago   Up Less than a second   0.0.0.0:8080->80/tcp, [::]:8080->80/tcp
 ```
 
-またはコンテナの中に入った状態でゲームを行うこともできます。  
-#### コンテナ内へ移動
+### アプリの設定
+ここまででインフラ部分は完成したので、次はアプリ側のセットアップを行っていきます。  
+以下コマンドでまずコンテナ内へ入ります。
 ```bash
-docker compose exec web bash
-```
-```
-# 実行結果（コンテナ内部へアクセス成功）
-root@3819c39a97a8:/var/www/html#
+docker compose exec abb bash
 ```
 
-#### ゲーム開始
+コンテナ内へ入ることができたら以下コマンドを実行し、Laravelのインストール等を行います。
 ```bash
-php index.php
+composer require -n
 ```
+
+無事処理が完了したら次に、アプリ動作に必要な環境変数を設定していきます。以下コマンドでアプリの環境変数を管理する`.env`ファイルを作成します。
+```bash
+cp .env.example
 ```
-# 実行結果
-戦争を開始します。
-プレイヤーの人数を入力してください（2~5）：
+
+`.env`ファイルのうち以下の部分を変更します。
+```env
+DB_CONNECTION=mysql       # sqlite → mysqlへ変更
+DB_HOST=db                # 127.0.0.1 → DBコンテナ名へ変更
+DB_PORT=3306
+DB_DATABASE=laravel_db    # laravel → 設定したデータベース名へ変更
+DB_USERNAME=laravel_user  # root → 設定したユーザ名へ変更
+DB_PASSWORD=pass          # 設定したパスワードを記述
+```
+
+次に以下コマンドを実行し、Laravelが動作するようにします。
+```bash
+php artisan key:generate
+```
+
+このコマンドも成功したらマイグレーションを行い、必要なテーブルを作成します。
+```bash
+php artisan migrate
+```
+
+そしてアプリの動作に必要となる、初期データの作成を行います。
+```bash
+php artisan db:seed
+```
+
+ここまででアプリ自体は正常に動作するようになります。最後に以下コマンドを行い`TailwindCSS`のスタイルを有効化します。
+```bash
+npm run build
+```
+
+この状態で以下のURLをブラウザに打ち込むとアプリのホーム画面が表示されます。これでセットアップは完了になります。
+```
+localhost:8080
 ```
