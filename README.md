@@ -36,7 +36,7 @@ compose.yml  docker  src
 イメージのビルド＆コンテナ起動時に必要となる環境変数の設定を行います。 
 
 まずはDB動作に必要な環境変数を設定します。
-`docker/db`ディレクトリ下へ移動し、`db_variables.env`という名前のファイルを作成します。そして環境変数を設定します（以下は一例）。
+`docker/db`ディレクトリ下へ移動し、`db_variables.env`という名前のファイルを作成します。そして以下のように環境変数を設定します。
 
 ```env
 MYSQL_ROOT_PASSWORD=pass
