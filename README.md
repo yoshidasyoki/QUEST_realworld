@@ -70,7 +70,7 @@ docker compose up -d
 
 処理が終わったらコンテナが正常に起動していることを以下コマンドで確認します。
 ```bash
-doker compose ps
+docker compose ps
 ```
 
 このような形で`app`、`db`、`nginx`コンテナがそれぞれ起動していればOKです。
