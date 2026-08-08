@@ -2,6 +2,7 @@
 アプレンティス「Laravel編」の提出課題になります。
 
 ## 概要
+
 RealWorldというフレームワークを学習するために作成されたプロジェクトがあり、その中の「Conduit」という架空のブログサイト作成に取り組みました。  
 基本的なCRUD操作＋認証・認可の処理をLaravelで実装しました。
 
@@ -78,6 +79,7 @@ realworld-nginx-1   realworld-nginx   "/docker-entrypoint.…"   nginx     3 sec
 
 ### アプリの設定
 ここまででインフラ部分は完成したので、次はアプリ側のセットアップを行っていきます。  
+
 以下コマンドでまずコンテナ内へ入ります。
 ```bash
 docker compose exec abb bash
