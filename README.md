@@ -24,7 +24,7 @@ RealWorldというフレームワークを学習するために作成された�
 ### ソースコードの取り込み
 最初に任意のディレクトリに移動し、ソースコードをお手元のPCに取り込みます。
 ```bash
-git clone https://github.com/yoshidasyoki/QUEST_war-card-game.git .
+git clone https://github.com/yoshidasyoki/QUEST_realworld.git .
 ```
 
 `ls`コマンドで確認し、以下のようなディレクトリ・ファイル構造となっていればOKです。
