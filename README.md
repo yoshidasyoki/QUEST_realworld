@@ -30,7 +30,7 @@ git clone https://github.com/yoshidasyoki/QUEST_realworld.git .
 `ls`コマンドで確認し、以下のようなディレクトリ・ファイル構造となっていればOKです。
 ```
 # 実行結果
-compose.yml  docker  src
+README.md  compose.yml  docker  set_container_user.sh  src
 ```
 
 ### 環境変数の設定
