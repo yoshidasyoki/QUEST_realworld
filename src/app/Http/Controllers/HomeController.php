@@ -15,9 +15,10 @@ class HomeController extends Controller
 
         $articles = match ($feed) {
             'your' => Article::where('user_id', Auth::id())
+                ->with('tags')
                 ->paginate(5)
                 ->withQueryString(),
-            'global' => Article::with('user')
+            'global' => Article::with(['user', 'tags'])
                 ->paginate(5)
                 ->withQueryString(),
             default => abort(404),

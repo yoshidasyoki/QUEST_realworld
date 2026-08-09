@@ -60,6 +60,7 @@ class ArticleController extends Controller
      */
     public function show(Article $article)
     {
+        $article->load('tags');
         $isAuthor = (Auth::id() === $article->user_id);
         return view('article.show.index', [
             'article' => $article,
